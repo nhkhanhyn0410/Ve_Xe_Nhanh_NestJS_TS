@@ -1,4 +1,4 @@
-import { PaymentMethod, PaymentStatus } from './enums';
+import { PaymentMethod, PaymentStatus } from './enums.js';
 
 export interface IPayment {
   id: string;

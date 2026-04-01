@@ -1,4 +1,4 @@
-import { LoyaltyTier } from './enums';
+import { LoyaltyTier } from './enums.js';
 
 export interface IUser {
   id: string;

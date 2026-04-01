@@ -1,4 +1,4 @@
-import { TicketStatus } from './enums';
+import { TicketStatus } from './enums.js';
 
 export interface ITicket {
   id: string;

@@ -2,7 +2,7 @@
   "name": "@ve_xe_nhanh_ts/shared-types",
   "version": "1.0.0",
   "private": true,
-  "type": "commonjs",
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

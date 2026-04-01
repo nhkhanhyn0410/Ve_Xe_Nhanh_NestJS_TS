@@ -1,4 +1,4 @@
-import { BookingStatus } from './enums';
+import { BookingStatus } from './enums.js';
 
 export interface ISeatSelection {
   seatNumber: string;

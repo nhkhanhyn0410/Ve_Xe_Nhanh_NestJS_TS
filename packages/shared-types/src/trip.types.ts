@@ -1,4 +1,4 @@
-import { TripStatus, BusType } from './enums';
+import { TripStatus, BusType } from './enums.js';
 
 export interface ITrip {
   id: string;
