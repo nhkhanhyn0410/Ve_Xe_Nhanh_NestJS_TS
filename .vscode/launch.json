@@ -1,0 +1,75 @@
+{
+  // Debug configurations - nhan F5 de chay
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // Debug backend NestJS - dat breakpoint roi nhan F5
+      "name": "Debug Backend",
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": [
+        "--inspect",
+        "-r",
+        "ts-node/register",
+        "-r",
+        "tsconfig-paths/register"
+      ],
+      "args": [
+        "${workspaceFolder}/apps/backend/src/main.ts"
+      ],
+      "cwd": "${workspaceFolder}/apps/backend",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "sourceMaps": true,
+      "console": "integratedTerminal",
+      "restart": true
+    },
+    {
+      // Attach debugger vao backend dang chay (npm run start:debug)
+      "name": "Attach to Backend",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "sourceMaps": true,
+      "restart": true
+    },
+    {
+      // Debug 1 file test cu the - mo file spec.ts roi nhan F5
+      "name": "Debug Current Test",
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "${workspaceFolder}/apps/backend/node_modules/.bin/jest",
+        "--runInBand",
+        "${relativeFile}"
+      ],
+      "cwd": "${workspaceFolder}/apps/backend",
+      "console": "integratedTerminal"
+    },
+    {
+      // Debug frontend Next.js
+      "name": "Debug Frontend",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "cwd": "${workspaceFolder}/apps/frontend",
+      "console": "integratedTerminal"
+    }
+  ],
+  "compounds": [
+    {
+      // Chay ca backend + frontend cung luc (debug mode)
+      "name": "Full Stack Debug",
+      "configurations": [
+        "Debug Backend",
+        "Debug Frontend"
+      ]
+    }
+  ]
+}

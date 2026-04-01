@@ -1,0 +1,55 @@
+{
+  // Khi mo project, VSCode se hien thong bao "Install Recommended Extensions"
+  // Tat ca thanh vien team se dung CUNG extensions -> dong bo code style
+  "recommendations": [
+    // ===== BAT BUOC =====
+
+    // TypeScript - da co san trong VSCode, khong can cai
+
+    // ESLint: Hien loi lint ngay trong editor (gach do duoi code)
+    "dbaeumer.vscode-eslint",
+
+    // Prettier: Tu dong format code khi save (Ctrl+S)
+    "esbenp.prettier-vscode",
+
+    // ===== RAT NEN CO =====
+
+    // NestJS: Snippets + Go to definition cho NestJS decorators
+    "ashinzekene.nestjs",
+
+    // MongoDB: Ket noi va xem database ngay trong VSCode
+    "mongodb.mongodb-vscode",
+
+    // Thunder Client: Test API ngay trong VSCode (thay the Postman)
+    "rangav.vscode-thunder-client",
+
+    // Tailwind CSS: Autocomplete class names cho frontend
+    "bradlc.vscode-tailwindcss",
+
+    // GitLens: Xem ai viet dong code nao, khi nao, trong commit nao
+    "eamodio.gitlens",
+
+    // Error Lens: Hien loi NGAY TREN DONG CODE (khong can hover)
+    "usernamehw.errorlens",
+
+    // ===== HUU ICH =====
+
+    // Auto Rename Tag: Doi ten tag mo -> tu dong doi tag dong (frontend)
+    "formulahendry.auto-rename-tag",
+
+    // DotENV: Highlight syntax cho file .env
+    "mikestead.dotenv",
+
+    // Docker: Quan ly containers ngay trong VSCode
+    "ms-azuretools.vscode-docker",
+
+    // Material Icon Theme: Icon dep cho file/folder
+    "pkief.material-icon-theme",
+
+    // TODO Highlight: Highlight cac TODO, FIXME trong code
+    "wayou.vscode-todo-highlight",
+
+    // Import Cost: Hien dung luong cua moi import (frontend)
+    "wix.vscode-import-cost"
+  ]
+}

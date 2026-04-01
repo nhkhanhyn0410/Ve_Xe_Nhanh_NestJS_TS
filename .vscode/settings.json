@@ -1,0 +1,107 @@
+{
+  // ============================================================
+  // EDITOR CO BAN
+  // ============================================================
+  // Format code tu dong khi nhan Ctrl+S
+  "editor.formatOnSave": true,
+  // Prettier la formatter mac dinh cho tat ca file
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // Tab = 2 spaces (dong bo voi .prettierrc)
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  // Xoa khoang trang thua cuoi dong khi save
+  "files.trimTrailingWhitespace": true,
+  // Them dong trong cuoi file khi save
+  "files.insertFinalNewline": true,
+  // ============================================================
+  // ESLINT
+  // ============================================================
+  // ESLint tu dong fix loi khi save (vd: unused imports)
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "never"
+  },
+  // ESLint kiem tra cac loai file nay
+  "eslint.validate": ["typescript", "typescriptreact", "javascript", "javascriptreact"],
+  // Dung flat config (eslint.config.mjs) - format moi
+  "eslint.useFlatConfig": true,
+  // ============================================================
+  // TYPESCRIPT
+  // ============================================================
+  // Dung TypeScript cua project (node_modules) thay vi cua VSCode
+  "typescript.tsdk": "node_modules/typescript/lib",
+  // Auto import dung path tuong doi
+  "typescript.preferences.importModuleSpecifier": "relative",
+  // Hien thi inlay hints (hien kieu du lieu mo nhat ben canh bien)
+  "typescript.inlayHints.parameterNames.enabled": "all",
+  "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+  // Tu dong update import khi rename/move file
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  // ============================================================
+  // FILE ASSOCIATIONS & EXCLUSIONS
+  // ============================================================
+  // An cac thu muc khong can thay trong Explorer
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.git": true,
+    "**/coverage": true,
+    "**/*.js.map": true
+  },
+  // Khong search trong cac thu muc nay
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/coverage": true,
+    "**/package-lock.json": true
+  },
+  // ============================================================
+  // FORMATTER THEO LOAI FILE
+  // ============================================================
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // ============================================================
+  // TAILWIND CSS (Frontend)
+  // ============================================================
+  // Autocomplete Tailwind trong cac file nay
+  "tailwindCSS.includeLanguages": {
+    "typescriptreact": "html"
+  },
+  // ============================================================
+  // DOCKER
+  // ============================================================
+  // Hien thi Docker containers trong sidebar
+  "docker.showStartPage": false,
+  // ============================================================
+  // GIT
+  // ============================================================
+  // Tu dong fetch thay doi tu remote
+  "git.autofetch": true,
+  // Confirm truoc khi sync
+  "git.confirmSync": true,
+  // ============================================================
+  // TERMINAL
+  // ============================================================
+  // Terminal mac dinh
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  // ============================================================
+  // ERROR LENS
+  // ============================================================
+  // Hien loi + warning ngay tren dong code
+
+  // Font nho hon code chinh
+  "errorLens.fontSize": "12px"
+}
