@@ -1,9 +1,11 @@
-import { LoyaltyTier } from './enums.js';
+import { Gender, LoyaltyTier } from './enums.js';
 
 export interface IUser {
   id: string;
   fullName: string;
   email: string;
+  dateOfBirth: Date;
+  gender: Gender;
   phone?: string;
   avatar?: string;
   isEmailVerified: boolean;

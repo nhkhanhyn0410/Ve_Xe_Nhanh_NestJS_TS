@@ -2,11 +2,11 @@
   "name": "@ve_xe_nhanh_ts/shared-types",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
     }
   },
   "scripts": {
