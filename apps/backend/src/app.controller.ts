@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { InjectConnection } from '@nestjs/mongoose';
-import { Connection } from 'mongoose';
+import mongoose, { Connection } from 'mongoose';
 
 @Controller()
 export class AppController {
@@ -14,7 +14,9 @@ export class AppController {
         status: 'ok',
         timestamp: new Date().toISOString(),
         mongodb:
-          this.connection.readyState === 1 ? 'connected' : 'disconnected',
+          this.connection.readyState === mongoose.ConnectionStates.connected
+            ? 'connected'
+            : 'disconnected',
         uptime: process.uptime(),
       },
     };
