@@ -31,8 +31,8 @@ export class User {
   @Prop({ required: true, unique: true, lowercase: true, trim: true })
   email: string;
 
-  @Prop({ unique: true, trim: true, sparse: true })
-  phone?: string;
+  @Prop({ required: true, unique: true, trim: true })
+  phone: string;
 
   @Prop({ select: false })
   password?: string;
@@ -41,10 +41,10 @@ export class User {
   avatar?: string;
 
   @Prop({ default: false })
-  isEmailVerified: boolean;
+  isEmailVerified?: boolean;
 
   @Prop({ default: false })
-  isPhoneVerified: boolean;
+  isPhoneVerified?: boolean;
 
   @Prop({ default: false })
   isBlocked: boolean;

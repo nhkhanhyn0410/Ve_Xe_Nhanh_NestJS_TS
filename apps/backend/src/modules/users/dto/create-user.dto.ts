@@ -4,11 +4,10 @@ import {
   IsString,
   IsDate,
   MinLength,
-  IsOptional,
   Matches,
   IsEnum,
 } from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Gender } from '@ve_xe_nhanh_ts/shared-types';
 
 export class CreateUserDto {
@@ -28,14 +27,14 @@ export class CreateUserDto {
   dateOfBirth: Date;
 
   @ApiProperty()
-  @IsNotEmpty()
-  @IsEmail()
+  @IsEmail({}, { message: 'Email không hợp lệ' })
+  @IsNotEmpty({ message: 'Email không được để trống' })
   email: string;
 
-  @ApiPropertyOptional()
-  @IsOptional()
+  @ApiProperty()
   @Matches(/^(0|\+84)\d{9}$/, { message: 'Số điện thoại không hợp lệ' })
-  phone?: string;
+  @IsNotEmpty({ message: 'Số điện thoại không được để trống' })
+  phone: string;
 
   @ApiProperty({ minLength: 6 })
   @IsNotEmpty()
