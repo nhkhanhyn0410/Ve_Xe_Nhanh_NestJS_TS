@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { ConfigService } from '@nestjs/config';
@@ -6,32 +6,46 @@ import { RegisterDto } from './dto/register.dto';
 import { JwtPayload } from '../../common/interfaces/jwt-payload.interface';
 import { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcryptjs';
+import { UserDocument } from '../users/schemas/user.schema';
 // import { RefreshTokenDto } from './dto/refresh-token.dto';
 
 @Injectable()
 export class AuthService {
+  private readonly logger: Logger;
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
     private configService: ConfigService,
-  ) {}
+  ) {
+    const isDev = this.configService.get<string>('NODE_ENV') === 'development';
+    this.logger = new Logger(isDev ? 'DEV' : 'PROD');
+  }
+
+  private toUserResponse(users: UserDocument) {
+    return {
+      id: users._id,
+      fullName: users.fullName,
+      email: users.email,
+      phone: users.phone,
+      isEmailVerified: users.isEmailVerified,
+      isPhoneVerified: users.isPhoneVerified,
+    };
+  }
 
   async register(registerDto: RegisterDto) {
     const user = await this.usersService.create(registerDto);
+    const userId = user._id.toString();
+    this.logger.log('Đang tạo người dùng mới...');
     const tokens = await this.generateTokens({
-      sub: user._id.toString(),
+      sub: userId,
       email: user.email,
     });
-
-    await this.usersService.updateRefreshToken(
-      user._id.toString(),
-      tokens.refreshToken,
-    );
-
-    await this.usersService.updateLastLogin(user._id.toString());
-
+    await Promise.all([
+      this.usersService.updateRefreshToken(userId, tokens.refreshToken),
+      this.usersService.updateLastLogin(userId),
+    ]);
     return {
-      user: user.toJSON() as Record<string, any>,
+      user: this.toUserResponse(user.toJSON() as UserDocument),
       ...tokens,
     };
   }
