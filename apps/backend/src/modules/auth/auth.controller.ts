@@ -5,8 +5,16 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  HttpException,
+  InternalServerErrorException,
+  Logger,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -24,8 +32,24 @@ export class AuthController {
   @Post('register')
   @Public()
   @ApiOperation({ summary: 'Đăng ký tài khoản' })
+  @ApiResponse({ status: 201, description: 'Đăng ký thành công' })
   async register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+    try {
+      const result = await this.authService.register(registerDto);
+
+      return {
+        message: 'Đăng ký tài khoản thành công',
+        ...result,
+      };
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      Logger.error(error);
+      throw new InternalServerErrorException(
+        'Có lỗi xảy ra khi đăng ký tài khoản',
+      );
+    }
   }
 
   @Post('login')
@@ -33,7 +57,19 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Đăng nhập' })
   async login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
+    try {
+      const result = await this.authService.login(loginDto);
+      return {
+        messeger: 'Đăng nhập thành công',
+        ...result,
+      };
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException('Có lỗi xảy ta khi đăng nhập');
+    }
   }
 
   @Post('refresh')
@@ -50,7 +86,15 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Đăng xuất' })
   async logout(@CurrentUser() user: JwtPayload) {
-    await this.authService.logout(user.sub);
-    return { message: 'Đăng xuất thành công' };
+    try {
+      await this.authService.logout(user.sub);
+      return { message: 'Đăng xuất thành công' };
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException('Có lỗi xảy ta khi đăng xuất');
+    }
   }
 }

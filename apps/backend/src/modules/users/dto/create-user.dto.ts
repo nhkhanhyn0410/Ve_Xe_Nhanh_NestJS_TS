@@ -11,19 +11,20 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Gender } from '@ve_xe_nhanh_ts/shared-types';
 
 export class CreateUserDto {
-  @ApiProperty()
+  @ApiProperty({ minLength: 3 })
   @IsNotEmpty()
+  @MinLength(3, { message: 'Họ và tên tối thiểu 3 ký tự' })
   @IsString()
   fullName: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Giới tính không được để trống' })
   @IsEnum(Gender)
   gender: Gender;
 
   @ApiProperty()
-  @IsNotEmpty()
   @IsDate()
+  @IsNotEmpty({ message: 'Ngày sinh không được để trống' })
   dateOfBirth: Date;
 
   @ApiProperty()
@@ -38,6 +39,6 @@ export class CreateUserDto {
 
   @ApiProperty({ minLength: 6 })
   @IsNotEmpty()
-  @MinLength(6)
+  @MinLength(6, { message: 'Mật khẩu tối thiểu 6 ký tự' })
   password: string;
 }
