@@ -3,29 +3,19 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
+    "module": "Node16",
+    "moduleResolution": "Node16",
     "baseUrl": "./",
     "paths": {
-      "@common/*": [
-        "src/common/*"
-      ],
-      "@config/*": [
-        "src/config/*"
-      ],
-      "@modules/*": [
-        "src/modules/*"
-      ]
+      "@common/*": ["src/common/*"],
+      "@config/*": ["src/config/*"],
+      "@modules/*": ["src/modules/*"]
     },
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
     "verbatimModuleSyntax": false
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "test"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "test"]
 }
