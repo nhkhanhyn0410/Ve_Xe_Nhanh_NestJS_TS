@@ -5,6 +5,7 @@ import { AppConfigModule } from './config/config.module';
 import { DatabaseModule } from './database/database.module';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { AdminModule } from './modules/admin/admin.module';
 import { OperatorsModule } from './modules/operators/operators.module';
 
 @Module({
@@ -13,6 +14,7 @@ import { OperatorsModule } from './modules/operators/operators.module';
     DatabaseModule,
     UsersModule,
     AuthModule,
+    AdminModule,
     OperatorsModule,
   ],
   controllers: [AppController],
