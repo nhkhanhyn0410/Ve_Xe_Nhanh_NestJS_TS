@@ -209,7 +209,7 @@ export class AuthService {
     await this.operatorsService.updateLastLogin(operator._id.toString());
 
     return {
-      operator: operator.toJSON(),
+      operator: operator.toJSON() as Record<string, any>,
       ...tokens,
     };
   }
@@ -247,7 +247,7 @@ export class AuthService {
     await this.adminService.updateLastLogin(admin._id.toString());
 
     return {
-      admin: admin.toJSON(),
+      admin: admin.toJSON() as Record<string, any>,
       ...tokens,
     };
   }
