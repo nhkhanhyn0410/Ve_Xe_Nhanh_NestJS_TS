@@ -4,11 +4,15 @@ import { ConfigService } from '@nestjs/config';
 import { UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
+import { OperatorsService } from '../operators/operators.service';
+import { AdminService } from '../admin/admin.service';
 import { Gender } from '@ve_xe_nhanh_ts/shared-types';
 
 describe('AuthService', () => {
   let authService: AuthService;
   let usersService: Partial<Record<keyof UsersService, jest.Mock>>;
+  let operatorsService: Partial<Record<keyof OperatorsService, jest.Mock>>;
+  let adminService: Partial<Record<keyof AdminService, jest.Mock>>;
 
   beforeEach(async () => {
     usersService = {
@@ -19,10 +23,26 @@ describe('AuthService', () => {
       updateLastLogin: jest.fn(),
     };
 
+    operatorsService = {
+      findByUsername: jest.fn(),
+      findByIdWithRefreshToken: jest.fn(),
+      updateRefreshToken: jest.fn(),
+      updateLastLogin: jest.fn(),
+    };
+
+    adminService = {
+      findByUsername: jest.fn(),
+      findByIdWithRefreshToken: jest.fn(),
+      updateRefreshToken: jest.fn(),
+      updateLastLogin: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
         { provide: UsersService, useValue: usersService },
+        { provide: OperatorsService, useValue: operatorsService },
+        { provide: AdminService, useValue: adminService },
         {
           provide: JwtService,
           useValue: {

@@ -13,6 +13,12 @@ export enum AdminRole {
   SYSTEM_MANAGER = 'system_manager',
 }
 
+export enum SystemRole {
+  USER = 'user',
+  ADMIN = 'admin',
+  OPERATOR = 'operator',
+}
+
 export enum Permission {
   MANAGE_BUSES = 'manage_buses',
   MANAGE_REPORTS = 'manage_reports',
@@ -82,4 +88,10 @@ export enum LoyaltyTier {
 export enum EmployeeRole {
   DRIVER = 'driver',
   TRIP_MANAGER = 'trip_manager',
+}
+
+export enum StopPointType {
+  STATION = 'station', // Bến xe lớn (VD: Bến Xe Miền Đông)
+  POINT = 'point', // Điểm đón trả dọc đường / văn phòng phụ
+  REST_STOP = 'rest_stop', // Trạm dừng chân
 }

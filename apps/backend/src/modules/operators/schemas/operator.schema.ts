@@ -2,19 +2,30 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { OperatorStatus } from '@ve_xe_nhanh_ts/shared-types';
 
-export type BusOperatorDocument = BusOperator & Document;
+export type OperatorDocument = Operator & Document;
 
 @Schema({ timestamps: true })
-export class BusOperator {
+export class Operator {
   // ===== THONG TIN CO BAN =====
 
-  @Prop({ required: true, trim: true, unique: true })
+  @Prop({ required: true, trim: true })
   companyName: string;
+
+  @Prop({
+    required: true,
+    unique: true,
+    index: true,
+    lowercase: true,
+    trim: true,
+  })
+  username: string;
+
+  @Prop({})
+  operatorAuth: string;
 
   @Prop({
     lowercase: true,
     trim: true,
-    index: true,
   })
   email: string;
 
@@ -61,7 +72,7 @@ export class BusOperator {
   @Prop({ type: Date })
   approvedAt?: Date;
 
-  @Prop({ type: Types.ObjectId, ref: 'User' })
+  @Prop({ type: Types.ObjectId, ref: 'Admin' })
   approvedBy?: Types.ObjectId;
 
   // ===== CAU HINH KINH DOANH =====
@@ -104,11 +115,14 @@ export class BusOperator {
 
   @Prop({ select: false })
   refreshToken?: string;
+
+  @Prop({ type: Date })
+  lastLoginAt?: Date;
 }
 
-export const BusOperatorSchema = SchemaFactory.createForClass(BusOperator);
+export const OperatorSchema = SchemaFactory.createForClass(Operator);
 
 // ===== INDEXES =====
-BusOperatorSchema.index({ companyName: 'text' }); // Full-text search
-BusOperatorSchema.index({ status: 1 });
-BusOperatorSchema.index({ averageRating: -1 });
+OperatorSchema.index({ companyName: 'text' }); // Full-text search
+OperatorSchema.index({ status: 1 });
+OperatorSchema.index({ averageRating: -1 });

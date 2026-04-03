@@ -1,5 +1,6 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { AdminRole } from '@ve_xe_nhanh_ts/shared-types';
 
 export type AdminDocument = Admin & Document;
 
@@ -12,7 +13,6 @@ export type AdminDocument = Admin & Document;
       delete ret._id;
       delete ret.__v;
       delete ret.password;
-      delete ret.role;
       delete ret.refreshToken;
       return ret;
     },
@@ -20,5 +20,38 @@ export type AdminDocument = Admin & Document;
 })
 export class Admin {
   @Prop({ required: true, trim: true })
-  adminName: string;
+  fullName: string;
+
+  @Prop({
+    required: true,
+    unique: true,
+    index: true,
+    lowercase: true,
+    trim: true,
+  })
+  username: string;
+
+  @Prop({ required: true, unique: true, lowercase: true, trim: true })
+  email: string;
+
+  @Prop({ required: true, select: false })
+  password?: string;
+
+  @Prop({ type: String, enum: AdminRole, default: AdminRole.SUPER_ADMIN })
+  adminRole: AdminRole;
+
+  @Prop()
+  avatar?: string;
+
+  @Prop({ default: true })
+  isActive: boolean;
+
+  @Prop({ select: false })
+  refreshToken?: string;
+
+  @Prop({ type: Date })
+  lastLoginAt?: Date;
 }
+
+export const AdminSchema = SchemaFactory.createForClass(Admin);
+AdminSchema.index({ email: 1 }, { unique: true });
