@@ -104,6 +104,23 @@ export class OperatorsService {
     return this.operatorModel.findOne({ email }).select('+password').exec();
   }
 
+  async findByUsername(username: string): Promise<BusOperatorDocument | null> {
+    return this.operatorModel.findOne({ username }).select('+password').exec();
+  }
+
+  async findByIdWithRefreshToken(id: string): Promise<BusOperatorDocument | null> {
+    return this.operatorModel.findById(id).select('+refreshToken').exec();
+  }
+
+  async updateRefreshToken(id: string, refreshToken: string | null): Promise<void> {
+    const hashedToken = refreshToken ? await bcrypt.hash(refreshToken, 12) : null;
+    await this.operatorModel.findByIdAndUpdate(id, { refreshToken: hashedToken });
+  }
+
+  async updateLastLogin(id: string): Promise<void> {
+    await this.operatorModel.findByIdAndUpdate(id, { lastLoginAt: new Date() });
+  }
+
   /**
    * Cap nhat thong tin nha xe
    */

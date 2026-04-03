@@ -11,6 +11,9 @@ export class BusOperator {
   @Prop({ required: true, trim: true })
   companyName: string;
 
+  @Prop({ required: true, unique: true, index: true, lowercase: true, trim: true })
+  username: string;
+
   @Prop({})
   operatorAuth: string;
 
@@ -106,6 +109,9 @@ export class BusOperator {
 
   @Prop({ select: false })
   refreshToken?: string;
+
+  @Prop({ type: Date })
+  lastLoginAt?: Date;
 }
 
 export const BusOperatorSchema = SchemaFactory.createForClass(BusOperator);

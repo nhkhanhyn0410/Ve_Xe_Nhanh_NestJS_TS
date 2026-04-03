@@ -72,6 +72,44 @@ export class AuthController {
     }
   }
 
+  @Post('operator/login')
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Đăng nhập nhà xe' })
+  async operatorLogin(@Body() loginDto: LoginDto) {
+    try {
+      const result = await this.authService.operatorLogin(loginDto);
+      return {
+        message: 'Đăng nhập nhà xe thành công',
+        ...result,
+      };
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Có lỗi xảy ra khi đăng nhập nhà xe');
+    }
+  }
+
+  @Post('admin/login')
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Đăng nhập quản trị viên' })
+  async adminLogin(@Body() loginDto: LoginDto) {
+    try {
+      const result = await this.authService.adminLogin(loginDto);
+      return {
+        message: 'Đăng nhập admin thành công',
+        ...result,
+      };
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Có lỗi xảy ra khi đăng nhập admin');
+    }
+  }
+
   @Post('refresh')
   @Public()
   @HttpCode(HttpStatus.OK)
@@ -87,7 +125,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Đăng xuất' })
   async logout(@CurrentUser() user: JwtPayload) {
     try {
-      await this.authService.logout(user.sub);
+      await this.authService.logout(user.sub, user.role);
       return { message: 'Đăng xuất thành công' };
     } catch (error) {
       if (error instanceof HttpException) {
