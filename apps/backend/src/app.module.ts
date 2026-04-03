@@ -9,7 +9,7 @@ import { AdminModule } from './modules/admin/admin.module';
 import { OperatorsModule } from './modules/operators/operators.module';
 
 import { StopPointsModule } from './modules/stop-points/stop-points.module';
-// import { RoutesModule } from './modules/routes/routes.module';
+import { RoutesModule } from './modules/routes/routes.module';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { StopPointsModule } from './modules/stop-points/stop-points.module';
     AdminModule,
     OperatorsModule,
     StopPointsModule,
-    // RoutesModule,
+    RoutesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
