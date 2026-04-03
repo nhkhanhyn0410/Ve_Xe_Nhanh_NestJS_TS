@@ -11,7 +11,7 @@ export * from './api.types.js';
 export * from './user.types.js';
 export * from './admin.types.js';
 export * from './operator.types.js';
-// export * from './stop-point.types.js';
+export * from './stop-point.types.js';
 // export * from './route.types.js';
 export * from './trip.types.js';
 export * from './booking.types.js';
