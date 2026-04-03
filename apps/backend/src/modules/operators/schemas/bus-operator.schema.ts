@@ -8,13 +8,15 @@ export type BusOperatorDocument = BusOperator & Document;
 export class BusOperator {
   // ===== THONG TIN CO BAN =====
 
-  @Prop({ required: true, trim: true, unique: true })
+  @Prop({ required: true, trim: true })
   companyName: string;
+
+  @Prop({})
+  operatorAuth: string;
 
   @Prop({
     lowercase: true,
     trim: true,
-    index: true,
   })
   email: string;
 
@@ -61,7 +63,7 @@ export class BusOperator {
   @Prop({ type: Date })
   approvedAt?: Date;
 
-  @Prop({ type: Types.ObjectId, ref: 'User' })
+  @Prop({ type: Types.ObjectId, ref: 'Admin' })
   approvedBy?: Types.ObjectId;
 
   // ===== CAU HINH KINH DOANH =====
