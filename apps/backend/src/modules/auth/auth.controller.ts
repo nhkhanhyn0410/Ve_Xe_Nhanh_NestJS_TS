@@ -87,7 +87,9 @@ export class AuthController {
       if (error instanceof HttpException) {
         throw error;
       }
-      throw new InternalServerErrorException('Có lỗi xảy ra khi đăng nhập nhà xe');
+      throw new InternalServerErrorException(
+        'Có lỗi xảy ra khi đăng nhập nhà xe',
+      );
     }
   }
 
@@ -106,7 +108,9 @@ export class AuthController {
       if (error instanceof HttpException) {
         throw error;
       }
-      throw new InternalServerErrorException('Có lỗi xảy ra khi đăng nhập admin');
+      throw new InternalServerErrorException(
+        'Có lỗi xảy ra khi đăng nhập admin',
+      );
     }
   }
 
