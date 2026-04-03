@@ -8,10 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 import { OperatorStatus } from '@ve_xe_nhanh_ts/shared-types';
-import {
-  BusOperator,
-  BusOperatorDocument,
-} from './schemas/bus-operator.schema';
+import { Operator, OperatorDocument } from './schemas/operator.schema';
 import { CreateOperatorDto } from './dto/create-operator.dto';
 import { UpdateOperatorDto } from './dto/update-operator.dto';
 import { UpdateBankInfoDto } from './dto/update-bank-info.dto';
@@ -19,8 +16,8 @@ import { UpdateBankInfoDto } from './dto/update-bank-info.dto';
 @Injectable()
 export class OperatorsService {
   constructor(
-    @InjectModel(BusOperator.name)
-    private operatorModel: Model<BusOperatorDocument>,
+    @InjectModel(Operator.name)
+    private operatorModel: Model<OperatorDocument>,
   ) {}
 
   // ===== CRUD CO BAN =====
@@ -31,7 +28,7 @@ export class OperatorsService {
    * - Hash password
    * - Status mac dinh = PENDING (cho admin duyet)
    */
-  async create(CreateOperatorDto: CreateOperatorDto): Promise<BusOperator> {
+  async create(CreateOperatorDto: CreateOperatorDto): Promise<Operator> {
     // Check email da ton tai
     // const existing = await this.operatorModel.findOne({
     //   email: CreateOperatorDto.email,
@@ -89,7 +86,7 @@ export class OperatorsService {
   /**
    * Lay thong tin 1 nha xe theo ID
    */
-  async findById(id: string): Promise<BusOperator> {
+  async findById(id: string): Promise<Operator> {
     const operator = await this.operatorModel.findById(id);
     if (!operator) {
       throw new NotFoundException('Nha xe khong ton tai');
@@ -100,21 +97,28 @@ export class OperatorsService {
   /**
    * Tim nha xe theo email
    */
-  async findByEmail(email: string): Promise<BusOperatorDocument | null> {
+  async findByEmail(email: string): Promise<OperatorDocument | null> {
     return this.operatorModel.findOne({ email }).select('+password').exec();
   }
 
-  async findByUsername(username: string): Promise<BusOperatorDocument | null> {
+  async findByUsername(username: string): Promise<OperatorDocument | null> {
     return this.operatorModel.findOne({ username }).select('+password').exec();
   }
 
-  async findByIdWithRefreshToken(id: string): Promise<BusOperatorDocument | null> {
+  async findByIdWithRefreshToken(id: string): Promise<OperatorDocument | null> {
     return this.operatorModel.findById(id).select('+refreshToken').exec();
   }
 
-  async updateRefreshToken(id: string, refreshToken: string | null): Promise<void> {
-    const hashedToken = refreshToken ? await bcrypt.hash(refreshToken, 12) : null;
-    await this.operatorModel.findByIdAndUpdate(id, { refreshToken: hashedToken });
+  async updateRefreshToken(
+    id: string,
+    refreshToken: string | null,
+  ): Promise<void> {
+    const hashedToken = refreshToken
+      ? await bcrypt.hash(refreshToken, 12)
+      : null;
+    await this.operatorModel.findByIdAndUpdate(id, {
+      refreshToken: hashedToken,
+    });
   }
 
   async updateLastLogin(id: string): Promise<void> {
@@ -124,7 +128,7 @@ export class OperatorsService {
   /**
    * Cap nhat thong tin nha xe
    */
-  async update(id: string, dto: UpdateOperatorDto): Promise<BusOperator> {
+  async update(id: string, dto: UpdateOperatorDto): Promise<Operator> {
     const operator = await this.operatorModel.findByIdAndUpdate(id, dto, {
       new: true,
     });
@@ -155,7 +159,7 @@ export class OperatorsService {
   /**
    * Duyet nha xe
    */
-  async approve(id: string, approvedBy: string): Promise<BusOperator> {
+  async approve(id: string, approvedBy: string): Promise<Operator> {
     const operator = await this.operatorModel.findById(id);
     if (!operator) {
       throw new NotFoundException('Nha xe khong ton tai');
@@ -177,7 +181,7 @@ export class OperatorsService {
   /**
    * Tu choi nha xe
    */
-  async reject(id: string, reason: string): Promise<BusOperator> {
+  async reject(id: string, reason: string): Promise<Operator> {
     const operator = await this.operatorModel.findById(id);
     if (!operator) {
       throw new NotFoundException('Nha xe khong ton tai');
@@ -196,7 +200,7 @@ export class OperatorsService {
   /**
    * Tam ngung nha xe
    */
-  async suspend(id: string, reason: string): Promise<BusOperator> {
+  async suspend(id: string, reason: string): Promise<Operator> {
     const operator = await this.operatorModel.findById(id);
     if (!operator) {
       throw new NotFoundException('Nha xe khong ton tai');
@@ -215,7 +219,7 @@ export class OperatorsService {
   /**
    * Mo lai nha xe (resume tu suspended)
    */
-  async resume(id: string): Promise<BusOperator> {
+  async resume(id: string): Promise<Operator> {
     const operator = await this.operatorModel.findById(id);
     if (!operator) {
       throw new NotFoundException('Nha xe khong ton tai');
@@ -236,10 +240,7 @@ export class OperatorsService {
   /**
    * Cap nhat thong tin ngan hang
    */
-  async updateBankInfo(
-    id: string,
-    dto: UpdateBankInfoDto,
-  ): Promise<BusOperator> {
+  async updateBankInfo(id: string, dto: UpdateBankInfoDto): Promise<Operator> {
     const operator = await this.operatorModel.findByIdAndUpdate(
       id,
       { bankInfo: dto },
