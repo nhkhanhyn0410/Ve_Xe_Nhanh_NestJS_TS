@@ -6,7 +6,9 @@ import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AdminService {
-  constructor(@InjectModel(Admin.name) private adminModel: Model<AdminDocument>) {}
+  constructor(
+    @InjectModel(Admin.name) private adminModel: Model<AdminDocument>,
+  ) {}
 
   async findByEmail(email: string): Promise<AdminDocument | null> {
     return this.adminModel.findOne({ email }).select('+password').exec();
@@ -28,8 +30,13 @@ export class AdminService {
     return this.adminModel.findById(id).select('+refreshToken').exec();
   }
 
-  async updateRefreshToken(id: string, refreshToken: string | null): Promise<void> {
-    const hashedToken = refreshToken ? await bcrypt.hash(refreshToken, 12) : null;
+  async updateRefreshToken(
+    id: string,
+    refreshToken: string | null,
+  ): Promise<void> {
+    const hashedToken = refreshToken
+      ? await bcrypt.hash(refreshToken, 12)
+      : null;
     await this.adminModel.findByIdAndUpdate(id, { refreshToken: hashedToken });
   }
 
