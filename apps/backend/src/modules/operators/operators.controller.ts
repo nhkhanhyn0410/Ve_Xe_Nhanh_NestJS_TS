@@ -11,13 +11,18 @@ import {
   DefaultValuePipe,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiQuery,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { OperatorStatus, SystemRole } from '@ve_xe_nhanh_ts/shared-types';
 import { OperatorsService } from './operators.service';
 import { CreateOperatorDto } from './dto/create-operator.dto';
 import { UpdateOperatorDto } from './dto/update-operator.dto';
 import { UpdateBankInfoDto } from './dto/update-bank-info.dto';
-import { MongoIdPipe } from '@common/pipes/mongo-id.pipe';
+import { MongoIdPipe } from '../../common/pipes/mongo-id.pipe';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
