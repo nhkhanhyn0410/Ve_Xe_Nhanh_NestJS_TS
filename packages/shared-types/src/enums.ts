@@ -5,6 +5,21 @@ export enum Gender {
   PREFER_NOT_TO_SAY = 'prefer_not_to_say',
 }
 
+export enum AdminRole {
+  SUPER_ADMIN = 'super_admin',
+  BUS_MANAGER = 'bus_manager',
+  REPORT_MANAGER = 'report_manager',
+  USER_MANAGER = 'user_manager',
+  SYSTEM_MANAGER = 'system_manager',
+}
+
+export enum Permission {
+  MANAGE_BUSES = 'manage_buses',
+  MANAGE_REPORTS = 'manage_reports',
+  MANAGE_USERS = 'manage_users',
+  MANAGE_SYSTEM = 'manage_system',
+}
+
 export enum OperatorStatus {
   PENDING = 'pending',
   APPROVED = 'approved',
