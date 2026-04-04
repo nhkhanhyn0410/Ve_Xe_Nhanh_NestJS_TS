@@ -10,7 +10,15 @@ import { Model, Types } from 'mongoose';
 import { Trip, TripDocument } from './schemas/trip.schema';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { UpdateTripDto } from './dto/update-trip.dto';
-import { SystemRole } from '@ve_xe_nhanh_ts/shared-types';
+import { SystemRole, TripStatus } from '@ve_xe_nhanh_ts/shared-types';
+
+export interface TripQuery {
+  operatorId?: string;
+  routeId?: string;
+  busId?: string;
+  status?: TripStatus;
+  date?: string;
+}
 
 @Injectable()
 export class TripsService {
@@ -29,7 +37,7 @@ export class TripsService {
       throw new BadRequestException('Giờ đến phải sau giờ khởi hành');
     }
 
-    const query: any = {
+    const query = {
       busId: new Types.ObjectId(busId),
       $or: [
         {
@@ -38,11 +46,10 @@ export class TripsService {
         },
       ],
       status: { $ne: 'cancelled' },
+      ...(excludeTripId
+        ? { _id: { $ne: new Types.ObjectId(excludeTripId) } }
+        : {}),
     };
-
-    if (excludeTripId) {
-      query._id = { $ne: new Types.ObjectId(excludeTripId) };
-    }
 
     const overlappingTrip = await this.tripModel.findOne(query);
 
@@ -69,19 +76,26 @@ export class TripsService {
     return trip.save();
   }
 
-  async findAll(query: any = {}) {
-    const filter: any = {};
-    if (query.operatorId)
-      filter.operatorId = new Types.ObjectId(query.operatorId);
-    if (query.routeId) filter.routeId = new Types.ObjectId(query.routeId);
-    if (query.busId) filter.busId = new Types.ObjectId(query.busId);
-    if (query.status) filter.status = query.status;
+  async findAll(query: TripQuery = {}): Promise<TripDocument[]> {
+    const { operatorId, routeId, busId, status, date } = query;
+
+    const filter: {
+      operatorId?: Types.ObjectId;
+      routeId?: Types.ObjectId;
+      busId?: Types.ObjectId;
+      status?: TripStatus;
+      departureTime?: { $gte: Date; $lte: Date };
+    } = {};
+    if (operatorId) filter.operatorId = new Types.ObjectId(operatorId);
+    if (routeId) filter.routeId = new Types.ObjectId(routeId);
+    if (busId) filter.busId = new Types.ObjectId(busId);
+    if (status) filter.status = status;
 
     // Filtering by date
-    if (query.date) {
-      const startOfDay = new Date(query.date);
+    if (date) {
+      const startOfDay = new Date(date);
       startOfDay.setHours(0, 0, 0, 0);
-      const endOfDay = new Date(query.date);
+      const endOfDay = new Date(date);
       endOfDay.setHours(23, 59, 59, 999);
       filter.departureTime = { $gte: startOfDay, $lte: endOfDay };
     }
