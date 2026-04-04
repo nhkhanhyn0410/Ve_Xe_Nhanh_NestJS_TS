@@ -9,7 +9,14 @@ import { Model, Types } from 'mongoose';
 import { Bus, BusDocument } from './schemas/bus.schema';
 import { CreateBusDto } from './dto/create-bus.dto';
 import { UpdateBusDto } from './dto/update-bus.dto';
-import { SystemRole } from '@ve_xe_nhanh_ts/shared-types';
+import { BusStatus, BusType, SystemRole } from '@ve_xe_nhanh_ts/shared-types';
+
+export interface BusQuery {
+  operatorId?: string;
+  status?: BusStatus;
+  busType?: BusType;
+  busNumber?: string;
+}
 
 @Injectable()
 export class BusesService {
@@ -30,16 +37,27 @@ export class BusesService {
     return bus.save(); // save() will trigger Mongoose pre('save') hooks!
   }
 
-  async findAll(query: any = {}) {
-    const filter: any = {};
-    if (query.operatorId)
-      filter.operatorId = new Types.ObjectId(query.operatorId);
-    if (query.status) filter.status = query.status;
-    if (query.busType) filter.busType = query.busType;
-    if (query.busNumber) filter.busNumber = new RegExp(query.busNumber, 'i');
+  async findAll(query: BusQuery = {}): Promise<BusDocument[]> {
+    const { operatorId, status, busType, busNumber } = query;
+
+    const filter: {
+      operatorId?: Types.ObjectId;
+      status?: BusStatus;
+      busType?: BusType;
+      busNumber?: RegExp;
+    } = {};
+
+    if (operatorId) filter.operatorId = new Types.ObjectId(operatorId);
+    if (status) filter.status = status;
+    if (busType) filter.busType = busType;
+    if (busNumber) filter.busNumber = new RegExp(busNumber, 'i');
+
+    const queryFilter = filter as unknown as Parameters<
+      Model<BusDocument>['find']
+    >[0];
 
     return this.busModel
-      .find(filter)
+      .find(queryFilter)
       .populate('operatorId', 'companyName')
       .sort({ createdAt: -1 })
       .exec();

@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types, Query } from 'mongoose';
+import { Document, Query, Types } from 'mongoose';
 import { BusType, BusStatus, BusAmenity } from '@ve_xe_nhanh_ts/shared-types';
 
 export type BusDocument = Bus & Document;
