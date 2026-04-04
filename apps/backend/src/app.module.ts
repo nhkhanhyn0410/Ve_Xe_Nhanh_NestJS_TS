@@ -12,11 +12,14 @@ import { StopPointsModule } from './modules/stop-points/stop-points.module';
 import { RoutesModule } from './modules/routes/routes.module';
 import { BusesModule } from './modules/buses/buses.module';
 import { TripsModule } from './modules/trips/trips.module';
+import { RedisModule } from './modules/redis/redis.module';
+import { BookingsModule } from '@modules/bookings/bookings.module';
 
 @Module({
   imports: [
     AppConfigModule,
     DatabaseModule,
+    RedisModule,
     UsersModule,
     AuthModule,
     AdminModule,
@@ -25,6 +28,7 @@ import { TripsModule } from './modules/trips/trips.module';
     RoutesModule,
     BusesModule,
     TripsModule,
+    BookingsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

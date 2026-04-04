@@ -68,6 +68,13 @@ export enum TripStatus {
   CANCELLED = 'cancelled',
 }
 
+export enum JourneyType {
+  DIRECT = 'direct',
+  WITH_TRANSIT = 'with_transit',
+  TRANSFER = 'transfer',
+  TRANSIT_AND_TRANSFER = 'transit_and_transfer',
+}
+
 export enum JourneyStatus {
   PREPARING = 'preparing',
   CHECKING_TICKETS = 'checking_tickets',
