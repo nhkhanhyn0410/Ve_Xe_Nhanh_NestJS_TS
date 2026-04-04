@@ -11,8 +11,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "dev": "tsc --watch",
-    "clean": "node clean.js"
+    "dev": "tsc --watch"
   },
   "devDependencies": {
     "typescript": "^5.3.0"
