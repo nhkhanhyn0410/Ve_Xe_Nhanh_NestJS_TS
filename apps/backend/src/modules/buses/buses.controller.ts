@@ -75,7 +75,7 @@ export class BusesController {
     const data = await this.busesService.update(
       id,
       user.sub,
-      user.role as string,
+      user.role,
       updateDto,
     );
     return { success: true, data };
@@ -90,7 +90,7 @@ export class BusesController {
     @Param('id', MongoIdPipe) id: string,
     @CurrentUser() user: JwtPayload,
   ) {
-    await this.busesService.remove(id, user.sub, user.role as string);
+    await this.busesService.remove(id, user.sub, user.role);
     return { success: true, message: 'Đã xóa xe thành công' };
   }
 }
