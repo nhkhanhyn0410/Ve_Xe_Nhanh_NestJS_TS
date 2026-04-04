@@ -47,10 +47,16 @@ export class BusesService {
       busNumber?: RegExp;
     } = {};
 
-    if (operatorId) filter.operatorId = new Types.ObjectId(operatorId);
+    if (operatorId && Types.ObjectId.isValid(operatorId)) {
+      filter.operatorId = new Types.ObjectId(operatorId);
+    }
     if (status) filter.status = status;
     if (busType) filter.busType = busType;
-    if (busNumber) filter.busNumber = new RegExp(busNumber, 'i');
+
+    if (busNumber) {
+      // Biển số xe thường được lưu UPPERCASE, dùng regex 'i' là an toàn nhất
+      filter.busNumber = new RegExp(busNumber, 'i');
+    }
 
     const queryFilter = filter as unknown as Parameters<
       Model<BusDocument>['find']
@@ -77,7 +83,7 @@ export class BusesService {
   async update(
     id: string,
     operatorId: string,
-    role: string,
+    role: SystemRole,
     updateDto: UpdateBusDto,
   ): Promise<Bus> {
     const bus = await this.findOne(id);
@@ -104,7 +110,11 @@ export class BusesService {
     return updatedBus as unknown as Bus;
   }
 
-  async remove(id: string, operatorId: string, role: string): Promise<void> {
+  async remove(
+    id: string,
+    operatorId: string,
+    role: SystemRole,
+  ): Promise<void> {
     const bus = await this.findOne(id);
 
     if (role !== SystemRole.ADMIN && bus.operatorId.toString() !== operatorId) {
