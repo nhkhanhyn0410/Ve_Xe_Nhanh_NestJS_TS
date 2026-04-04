@@ -11,6 +11,7 @@ import { OperatorsModule } from './modules/operators/operators.module';
 import { StopPointsModule } from './modules/stop-points/stop-points.module';
 import { RoutesModule } from './modules/routes/routes.module';
 import { BusesModule } from './modules/buses/buses.module';
+import { TripsModule } from './modules/trips/trips.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { BusesModule } from './modules/buses/buses.module';
     StopPointsModule,
     RoutesModule,
     BusesModule,
+    TripsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
