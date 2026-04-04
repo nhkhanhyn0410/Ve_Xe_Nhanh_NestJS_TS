@@ -124,7 +124,7 @@ export class TripsService {
   async update(
     id: string,
     operatorId: string,
-    role: string,
+    role: SystemRole,
     updateDto: UpdateTripDto,
   ): Promise<Trip> {
     const trip = await this.findOne(id);
@@ -152,7 +152,11 @@ export class TripsService {
       .exec() as unknown as Trip;
   }
 
-  async remove(id: string, operatorId: string, role: string): Promise<void> {
+  async remove(
+    id: string,
+    operatorId: string,
+    role: SystemRole,
+  ): Promise<void> {
     const trip = await this.findOne(id);
 
     if (
