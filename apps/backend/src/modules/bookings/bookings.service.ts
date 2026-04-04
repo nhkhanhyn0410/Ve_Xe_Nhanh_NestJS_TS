@@ -10,8 +10,14 @@ import { CreateBookingDto } from './dto/create-booking.dto';
 import {
   SystemRole,
   BookingStatus,
-  JourneyType,
+  // JourneyType,
 } from '@ve_xe_nhanh_ts/shared-types';
+
+export interface BookingQuery {
+  userId?: string;
+  bookingCode?: string;
+  status?: BookingStatus;
+}
 
 @Injectable()
 export class BookingsService {
@@ -30,8 +36,8 @@ export class BookingsService {
 
   async create(
     userId: string | undefined,
-    createDto: CreateBookingDto,
-  ): Promise<Booking> {
+    createBookingDto: CreateBookingDto,
+  ): Promise<BookingDocument> {
     // In Phase 2: Add Redis Distributed Lock Here before proceeding
     // In Phase 3: Integrate with real Payment module
 
@@ -39,50 +45,58 @@ export class BookingsService {
     const bookingCode = this.generateBookingCode();
 
     // Generate segment ticket codes
-    const tickets = createDto.tickets.map((t, index) => ({
+    const tickets = createBookingDto.tickets.map((t, index) => ({
       ...t,
       ticketCode: `${bookingCode}-${index + 1}`,
       operatorId: new Types.ObjectId(t.operatorId),
       tripId: new Types.ObjectId(t.tripId),
       pickupPointId: new Types.ObjectId(t.pickupPointId),
       dropoffPointId: new Types.ObjectId(t.dropoffPointId),
+      departureTime: new Date(t.departureTime),
+      arrivalTime: new Date(t.arrivalTime),
     }));
 
     // If there's transit info, make sure it has the proper ObjectIds
     let transitInfo = undefined;
-    if (createDto.transitInfo) {
+    if (createBookingDto.transitInfo) {
       transitInfo = {
-        ...createDto.transitInfo,
-        hubStopPointId: createDto.transitInfo.hubStopPointId
-          ? new Types.ObjectId(createDto.transitInfo.hubStopPointId)
+        ...createBookingDto.transitInfo,
+        hubStopPointId: createBookingDto.transitInfo.hubStopPointId
+          ? new Types.ObjectId(createBookingDto.transitInfo.hubStopPointId)
           : undefined,
       };
     }
 
-    const booking = new this.bookingModel({
+    const booking = await this.bookingModel.create({
       bookingCode,
       userId: userId ? new Types.ObjectId(userId) : undefined,
-      passengerInfo: createDto.passengerInfo,
-      journeyType: createDto.journeyType,
+      passengerInfo: createBookingDto.passengerInfo,
+      journeyType: createBookingDto.journeyType,
       tickets,
       transitInfo,
-      totalAmount: createDto.totalAmount,
-      notes: createDto.notes,
+      totalAmount: createBookingDto.totalAmount,
+      notes: createBookingDto.notes,
     });
 
-    return booking.save();
+    return booking;
   }
 
-  async findAll(query: any = {}) {
-    const filter: any = {};
-    if (query.userId) filter.userId = new Types.ObjectId(query.userId);
-    if (query.bookingCode) filter.bookingCode = query.bookingCode;
-    if (query.status) filter.status = query.status;
+  async findAll(query: BookingQuery = {}): Promise<BookingDocument[]> {
+    const { userId, bookingCode, status } = query;
+
+    const filter: {
+      userId?: Types.ObjectId;
+      bookingCode?: string;
+      status?: BookingStatus;
+    } = {};
+    if (userId) filter.userId = new Types.ObjectId(userId);
+    if (bookingCode) filter.bookingCode = bookingCode;
+    if (status) filter.status = status;
 
     return this.bookingModel.find(filter).sort({ createdAt: -1 }).exec();
   }
 
-  async findOne(id: string): Promise<Booking> {
+  async findOne(id: string): Promise<BookingDocument> {
     const booking = await this.bookingModel
       .findById(id)
       .populate('tickets.operatorId', 'businessName')
@@ -100,8 +114,8 @@ export class BookingsService {
     id: string,
     status: BookingStatus,
     userId: string,
-    role: string,
-  ): Promise<Booking> {
+    role: SystemRole,
+  ): Promise<BookingDocument> {
     const booking = await this.findOne(id);
 
     if (role === SystemRole.USER && booking.userId?.toString() !== userId) {

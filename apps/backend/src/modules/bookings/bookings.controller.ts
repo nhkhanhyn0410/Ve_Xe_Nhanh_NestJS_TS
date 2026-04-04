@@ -88,7 +88,7 @@ export class BookingsController {
       id,
       status,
       user.sub,
-      user.role as string,
+      user.role,
     );
     return { success: true, data };
   }
