@@ -1,4 +1,16 @@
-import { IsString, IsNotEmpty, IsOptional, IsNumber, Min, IsDateString, IsEmail, ValidateNested, IsArray, IsBoolean, IsEnum } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsNumber,
+  Min,
+  IsDateString,
+  IsEmail,
+  ValidateNested,
+  IsArray,
+  IsBoolean,
+  IsEnum,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { JourneyType } from '@ve_xe_nhanh_ts/shared-types';
@@ -50,7 +62,8 @@ export class TransitInstructionDto {
   hubStopPointId?: string;
 }
 
-export class SegmentTicketDto { // Using SegmentTicket for payload validation
+export class SegmentTicketDto {
+  // Using SegmentTicket for payload validation
   @ApiProperty()
   @IsString()
   @IsNotEmpty()

@@ -1,5 +1,19 @@
-import { Controller, Get, Post, Body, Put, Param, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Put,
+  Param,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { BookingsService } from './bookings.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { MongoIdPipe } from '@common/pipes/mongo-id.pipe';
@@ -32,7 +46,10 @@ export class BookingsController {
   @ApiBearerAuth()
   @ApiOperation({ summary: '[Khách hàng] Lấy danh sách vé đã đặt của tôi' })
   async findMyBookings(@CurrentUser() user: JwtPayload, @Query() query: any) {
-    const data = await this.bookingsService.findAll({ ...query, userId: user.sub });
+    const data = await this.bookingsService.findAll({
+      ...query,
+      userId: user.sub,
+    });
     return { success: true, data };
   }
 
@@ -45,7 +62,9 @@ export class BookingsController {
 
   // Khách hàng có thể Book mà không cần Login (Guest Booking)
   @Post()
-  @ApiOperation({ summary: 'Tạo đơn đặt vé mới (Có thể tạo Giỏ Hàng Nhỏ để Nối Chuyến)' })
+  @ApiOperation({
+    summary: 'Tạo đơn đặt vé mới (Có thể tạo Giỏ Hàng Nhỏ để Nối Chuyến)',
+  })
   async create(
     @Body() createDto: CreateBookingDto,
     // Optional User
@@ -65,7 +84,12 @@ export class BookingsController {
     @Body('status') status: BookingStatus,
     @CurrentUser() user: JwtPayload,
   ) {
-    const data = await this.bookingsService.updateStatus(id, status, user.sub, user.role as string);
+    const data = await this.bookingsService.updateStatus(
+      id,
+      status,
+      user.sub,
+      user.role as string,
+    );
     return { success: true, data };
   }
 }

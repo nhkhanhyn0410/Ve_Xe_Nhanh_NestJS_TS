@@ -1,6 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { BookingStatus, PaymentMethod, PaymentStatus, TicketStatus, JourneyType } from '@ve_xe_nhanh_ts/shared-types';
+import {
+  BookingStatus,
+  PaymentMethod,
+  PaymentStatus,
+  TicketStatus,
+  JourneyType,
+} from '@ve_xe_nhanh_ts/shared-types';
 
 export type BookingDocument = Booking & Document;
 
@@ -37,7 +43,8 @@ export class TransitInstruction {
   @Prop({ type: Types.ObjectId, ref: 'StopPoint' })
   hubStopPointId?: Types.ObjectId;
 }
-export const TransitInstructionSchema = SchemaFactory.createForClass(TransitInstruction);
+export const TransitInstructionSchema =
+  SchemaFactory.createForClass(TransitInstruction);
 
 @Schema({ _id: false })
 export class SegmentTicket {
@@ -73,7 +80,11 @@ export class SegmentTicket {
 }
 export const SegmentTicketSchema = SchemaFactory.createForClass(SegmentTicket);
 
-@Schema({ timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } })
+@Schema({
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true },
+})
 export class Booking {
   @Prop({ required: true, unique: true, index: true })
   bookingCode: string;
@@ -87,7 +98,11 @@ export class Booking {
   @Prop({ type: String, enum: JourneyType, required: true })
   journeyType: JourneyType;
 
-  @Prop({ type: [SegmentTicketSchema], required: true, validate: [arrayLimit, 'A booking must have at least one ticket segment.'] })
+  @Prop({
+    type: [SegmentTicketSchema],
+    required: true,
+    validate: [arrayLimit, 'A booking must have at least one ticket segment.'],
+  })
   tickets: SegmentTicket[];
 
   @Prop({ type: TransitInstructionSchema })
@@ -105,7 +120,12 @@ export class Booking {
   @Prop()
   couponCode?: string;
 
-  @Prop({ type: String, enum: BookingStatus, default: BookingStatus.PENDING, index: true })
+  @Prop({
+    type: String,
+    enum: BookingStatus,
+    default: BookingStatus.PENDING,
+    index: true,
+  })
   status: BookingStatus;
 
   @Prop({ type: String, enum: PaymentMethod })

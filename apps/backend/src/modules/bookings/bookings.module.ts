@@ -6,12 +6,10 @@ import { BookingsService } from './bookings.service';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: Booking.name, schema: BookingSchema },
-    ])
+    MongooseModule.forFeature([{ name: Booking.name, schema: BookingSchema }]),
   ],
   controllers: [BookingsController],
   providers: [BookingsService],
-  exports: [BookingsService]
+  exports: [BookingsService],
 })
 export class BookingsModule {}
