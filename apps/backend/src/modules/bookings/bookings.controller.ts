@@ -92,4 +92,24 @@ export class BookingsController {
     );
     return { success: true, data };
   }
+
+  /**
+   * API cho Frontend render sơ đồ ghế real-time.
+   * Trả về 3 danh sách: booked (đỏ), held (vàng cam), available (xanh lá).
+   */
+  @Get('seats/:tripId')
+  @ApiOperation({
+    summary:
+      'Lấy trạng thái Real-time toàn bộ ghế trên 1 chuyến (Booked / Held / Available)',
+  })
+  async getSeatAvailability(
+    @Param('tripId', MongoIdPipe) tripId: string,
+    @Query('seatNumbers') seatNumbers: string, // Comma-separated: "A1,A2,B1,B2"
+  ) {
+    const seats = seatNumbers
+      ? seatNumbers.split(',').map((s) => s.trim())
+      : [];
+    const data = await this.bookingsService.getSeatAvailability(tripId, seats);
+    return { success: true, data };
+  }
 }
