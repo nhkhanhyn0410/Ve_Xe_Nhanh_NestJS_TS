@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Document, Types, Query } from 'mongoose';
 import { BusType, BusStatus, BusAmenity } from '@ve_xe_nhanh_ts/shared-types';
 
 export type BusDocument = Bus & Document;
@@ -113,53 +113,54 @@ BusSchema.virtual('isAvailable').get(function () {
 
 // Hàm dùng chung cho việc tính toán tổng số ghế
 function calculateTotalSeats(layout: string[][]): number {
-  let count = 0;
-  for (const row of layout) {
-    for (const seat of row) {
-      if (seat && typeof seat === 'string') {
-        const s = seat.toUpperCase();
-        if (
-          s !== '' &&
-          s !== 'DRIVER' &&
-          s !== 'FLOOR_2' &&
-          s !== 'BUS' &&
-          s !== 'AISLE' &&
-          !s.includes('AISLE')
-        ) {
-          count++;
-        }
-      }
-    }
-  }
-  return count;
+  if (!layout) return 0;
+  const ignoredSeats = ['DRIVER', 'FLOOR_2', 'BUS', 'AISLE'];
+  return layout.flat().filter((seat) => {
+    if (!seat || typeof seat !== 'string') return false;
+    const s = seat.toUpperCase().trim();
+    return s !== '' && !ignoredSeats.includes(s) && !s.includes('AISLE');
+  }).length;
 }
 
 // Pre-save
-(BusSchema as any).pre('save', function (this: BusDocument, next: any) {
-  if (this.isModified('seatLayout') && (this.seatLayout as any)?.layout) {
-    (this.seatLayout as any).totalSeats = calculateTotalSeats(
-      (this.seatLayout as any).layout,
-    );
-  }
-  next();
-});
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+(BusSchema as any).pre(
+  'save',
+  function (this: BusDocument, next: (err?: Error) => void) {
+    if (this.isModified('seatLayout') && this.seatLayout?.layout) {
+      this.seatLayout.totalSeats = calculateTotalSeats(this.seatLayout.layout);
+    }
+    next();
+  },
+);
+
+interface BusUpdate {
+  seatLayout?: SeatLayout;
+  $set?: {
+    seatLayout?: SeatLayout;
+  };
+}
 
 // Pre-findOneAndUpdate
-(BusSchema as any).pre('findOneAndUpdate', function (this: any, next: any) {
-  const update = this.getUpdate();
-  if (!update) return next();
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+(BusSchema as any).pre(
+  'findOneAndUpdate',
+  function (this: Query<unknown, BusDocument>, next: (err?: Error) => void) {
+    const update = this.getUpdate() as BusUpdate;
+    if (!update) return next();
 
-  // NestJS/Mongoose có thể để update dict nguyên khối
-  if (update.seatLayout && update.seatLayout.layout) {
-    update.seatLayout.totalSeats = calculateTotalSeats(
-      update.seatLayout.layout,
-    );
-  }
-  // Xử lý cả trường hợp dùng $set
-  if (update.$set && update.$set.seatLayout && update.$set.seatLayout.layout) {
-    update.$set.seatLayout.totalSeats = calculateTotalSeats(
-      update.$set.seatLayout.layout,
-    );
-  }
-  next();
-});
+    // Kiểm tra cả update trực tiếp và $set
+    const seatLayout = update.seatLayout || update.$set?.seatLayout;
+
+    if (seatLayout?.layout) {
+      const totalSeats = calculateTotalSeats(seatLayout.layout);
+      if (update.seatLayout) {
+        update.seatLayout.totalSeats = totalSeats;
+      }
+      if (update.$set?.seatLayout) {
+        update.$set.seatLayout.totalSeats = totalSeats;
+      }
+    }
+    next();
+  },
+);
