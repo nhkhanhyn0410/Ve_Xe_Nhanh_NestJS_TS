@@ -40,8 +40,6 @@ export const REDIS_CLIENT = 'REDIS_CLIENT';
   exports: [REDIS_CLIENT],
 })
 export class RedisModule implements OnModuleDestroy {
-  constructor(private readonly configService: ConfigService) {}
-
   /** Dọn dẹp kết nối Redis khi Module bị huỷ */
   onModuleDestroy(): void {
     // Redis client sẽ tự đóng khi process exit
