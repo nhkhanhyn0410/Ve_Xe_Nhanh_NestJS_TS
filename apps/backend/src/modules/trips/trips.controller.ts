@@ -79,7 +79,7 @@ export class TripsController {
     const data = await this.tripsService.update(
       id,
       user.sub,
-      user.role as string,
+      user.role,
       updateDto,
     );
     return { success: true, data };
@@ -94,7 +94,7 @@ export class TripsController {
     @Param('id', MongoIdPipe) id: string,
     @CurrentUser() user: JwtPayload,
   ) {
-    await this.tripsService.remove(id, user.sub, user.role as string);
+    await this.tripsService.remove(id, user.sub, user.role);
     return { success: true, message: 'Đã hủy chuyến xe thành công' };
   }
 }
