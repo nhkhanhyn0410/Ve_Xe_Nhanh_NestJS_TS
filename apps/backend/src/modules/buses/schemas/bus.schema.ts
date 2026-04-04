@@ -135,15 +135,17 @@ function calculateTotalSeats(layout: string[][]): number {
 }
 
 // Pre-save
-BusSchema.pre('save', function (this: any, next: any) {
-  if (this.seatLayout && this.seatLayout.layout) {
-    this.seatLayout.totalSeats = calculateTotalSeats(this.seatLayout.layout);
+(BusSchema as any).pre('save', function (this: BusDocument, next: any) {
+  if (this.isModified('seatLayout') && (this.seatLayout as any)?.layout) {
+    (this.seatLayout as any).totalSeats = calculateTotalSeats(
+      (this.seatLayout as any).layout,
+    );
   }
   next();
 });
 
 // Pre-findOneAndUpdate
-BusSchema.pre('findOneAndUpdate', function (this: any, next: any) {
+(BusSchema as any).pre('findOneAndUpdate', function (this: any, next: any) {
   const update = this.getUpdate();
   if (!update) return next();
 

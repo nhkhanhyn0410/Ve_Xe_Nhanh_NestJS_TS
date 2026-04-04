@@ -37,6 +37,27 @@ export enum BusType {
   SEATER = 'seater',
   SLEEPER = 'sleeper',
   LIMOUSINE = 'limousine',
+  CABIN_SINGLE = 'cabin_single',
+  CABIN_DOUBLE = 'cabin_double',
+}
+
+export enum BusStatus {
+  ACTIVE = 'active',
+  MAINTENANCE = 'maintenance',
+  RETIRED = 'retired',
+}
+
+export enum BusAmenity {
+  WIFI = 'wifi',
+  AC = 'ac',
+  TOILET = 'toilet',
+  TV = 'tv',
+  WATER = 'water',
+  BLANKET = 'blanket',
+  PILLOW = 'pillow',
+  CHARGING = 'charging',
+  SNACK = 'snack',
+  ENTERTAINMENT = 'entertainment',
 }
 
 export enum TripStatus {
