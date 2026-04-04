@@ -68,6 +68,15 @@ export enum TripStatus {
   CANCELLED = 'cancelled',
 }
 
+export enum JourneyStatus {
+  PREPARING = 'preparing',
+  CHECKING_TICKETS = 'checking_tickets',
+  IN_TRANSIT = 'in_transit',
+  AT_STOP = 'at_stop',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled',
+}
+
 export enum BookingStatus {
   PENDING = 'pending',
   CONFIRMED = 'confirmed',
